@@ -1,0 +1,77 @@
+Script started on Sun 06 Mar 2022 10:53:27 PM UTC
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ ls [K[K[Klvremove /dev/vg_root/lv_root
+  WARNING: Running as a non-root user. Functionality may be unavailable.
+  /run/lvm/lvmetad.socket: access failed: Permission denied
+  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+  /dev/mapper/control: open failed: Permission denied
+  Failure to communicate with kernel device-mapper driver.
+  Incompatible libdevmapper 1.02.170-RHEL7 (2020-03-24) and kernel driver (unknown version).
+  /run/lock/lvm/V_vg_root:aux: open failed: Permission denied
+  Can't get lock for vg_root
+  Cannot process volume group vg_root
+]0;vagrant@lvm:~[vagrant@lvm ~]$ sudo su [K
+
+
+^C
+]0;vagrant@lvm:~[vagrant@lvm ~]$ sudo su
+ls ]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# ls [K[K[Kvgremove /dev/vg_root[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Klvremove /dev/vg_root/lv_root
+Do you really want to remove active logical volume vg_root/lv_root? [y/n]: y
+  Logical volume "lv_root" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# vgremove /dev/vg_root\[K
+  Volume group "vg_root" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# pvremove /de`[Kv/sd[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Klsblk 
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                        8:0    0   40G  0 disk 
+├─sda1                     8:1    0    1M  0 part 
+├─sda2                     8:2    0    1G  0 part /boot
+└─sda3                     8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00  253:0    0    8G  0 lvm  /
+  └─VolGroup00-LogVol01  253:1    0  1.5G  0 lvm  [SWAP]
+sdb                        8:16   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0  253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:7    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0 253:4    0  952M  0 lvm  
+  └─vg_var-lv_var        253:7    0  952M  0 lvm  /var
+sdc                        8:32   0   10G  0 disk 
+sdd                        8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1  253:5    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:7    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1 253:6    0  952M  0 lvm  
+  └─vg_var-lv_var        253:7    0  952M  0 lvm  /var
+sde                        8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lsblk vgremove /dev/vg_rootlvremove /dev/vg_root/lv_root[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kpvremove /dev/sdc
+  Labels on physical volume "/dev/sdc" successfully wiped.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# ls
+ls           lsb_release  lsinitrd     lslogins     lsns
+lsattr       lscpu        lsipc        lsmem        lsscsi
+lsblk        lshw         lslocks      lsmod        
+[root@lvm vagrant]# ls[K[Kps[Kv
+pvchange   pvcreate   pvmove     pvresize   pvscan     
+pvck       pvdisplay  pvremove   pvs        
+[root@lvm vagrant]# pvdisplay 
+  --- Physical volume ---
+  PV Name               /dev/sda3
+  VG Name               VolGroup00
+  PV Size               <39.00 GiB / not usable 30.00 MiB
+  Allocatable           yes 
+  PE Size               32.00 MiB
+  Total PE              1247
+  Free PE               943
+  Allocated PE          304
+  PV UUID               vrrtbx-g480-HcJI-5wLn-4aOf-Olld-rC03AY
+   
+  --- Physical volume ---
+  PV Name               /dev/sdb
+  VG Name               vg_var
+  PV Size               2.00 GiB / not usable 4.00 MiB
+  Allocatable           yes 
+  PE Size               4.00 MiB
+  Total PE              511
+  Free PE               272
+  Allocated PE          239
+  PV UUID               gEe3zz-WWui-NcPG-u6py-FvUm-eBWM-5vr3Yp
+   
+  --- Physical volume ---
+  PV Name               /dev/sdd
+  VG Name               vg_var
+  PV Size              
