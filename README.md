@@ -31,8 +31,30 @@ xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
 ```
  cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g; s/.img//g"` --force; done
 ```
-Для того, чтобы при загрузки ОС был смотирован нужный **root** нужно в файле **/boot/grub2/grub.cfg** заменить **rd.lvm.lv=VolGroup00/LogVol00** на ** rd.lvm.lv=vg_root/lv_root**
+Для того, чтобы при загрузки ОС был смотирован нужный **root** нужно в файле **/boot/grub2/grub.cfg** заменить **rd.lvm.lv=VolGroup00/LogVol00** на **rd.lvm.lv=vg_root/lv_root**
 
 
-Перезанружаем ОС с новым  root томом.  
+Перезанружаем ОС с новым  root томом. 
+
+Теперь необходимо изменить размер старой VG и вернуть на него **root**. Удаляем старый LV размером 40Gb и создаем новый на 8Gb 
+```
+lvremove /dev/VolGroup00/LogVol00
+lvcreate -n VolGroup00/LogVol00 -L 8G /dev/VolGroup00
+```
+Создаем файловую систему, монтируем ее и копируем  данные
+```
+mkfs.xfs /dev/VolGroup00/LogVol00
+mount /dev/VolGroup00/LogVol00 /mnt
+xfsdump -J - /dev/vg_root/lv_root | xfsrestore -J - /mnt
+```
+Так же  как и в предыдущий раз переконфигурируем **grub**,  кроме правки файла  **/etc/grub2/grub.cfg**
+```
+ for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$i; done
+ chroot /mnt/
+ grub2-mkconfig -o /boot/grub2/grub.cfg
+ ```
+ ```
+ cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g; s/.img//g"` --force; done
+ ```
+   
 
